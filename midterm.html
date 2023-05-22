@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+  <title>TA Assistance Tracker</title>
+</head>
+<body>
+  <form id="assistanceForm">
+    <label for="entryInput">Enter Assistance:</label>
+    <input type="text" id="entryInput" placeholder="DIRECTORY_ID> DESCRIPTION DURATION">
+    <button type="button" onclick="addEntry()">Add Entry</button>
+    
+    <button type="button" onclick="summary()">Summary</button>
+  </form>
+
+  <h2>Entries</h2>
+  <ul id="entryList"></ul>
+
+  <h2>Summary</h2>
+  <div id="summary"></div>
+
+  <script>
+
+    let entries = [];
+
+    function addEntry() {
+      const entryInput = document.getElementById('entryInput').value.trim();
+      if (entryInput === '') {
+        alert('Invalid entry');
+        return;
+      }
+
+      const entryValues = entryInput.split(' ');
+
+      if (entryValues.length !== 3) {
+        alert('Invalid entry');
+        return;
+      }
+
+      const directoryId = entryValues[0];
+      const description = entryValues[1];
+      const duration = entryValues[2];
+
+      entries.push({ directoryId, description, duration });
+
+      const entryList = document.getElementById('entryList');
+      const entryItem = document.createElement('li');
+      entryItem.textContent = `${directoryId} ${description} ${duration}`;
+      entryList.appendChild(entryItem);
+
+      document.getElementById('entryInput').value = '';
+    }
+
+    function summary() {
+      const summaryDiv = document.getElementById('summary');
+      summaryDiv.textContent = '';
+
+      const sortedEntries = entries.sort((a, b) => parseInt(a.duration) - parseInt(b.duration));
+      const entryCount = sortedEntries.length;
+
+      const entryCountText = document.createElement('p');
+      entryCountText.textContent = `Number of entries: ${entryCount}`;
+      summaryDiv.appendChild(entryCountText);
+
+      sortedEntries.forEach(entry => {
+        const entryItem = document.createElement('p');
+        entryItem.textContent = `${entry.directoryId} ${entry.description} ${entry.duration}`;
+        summaryDiv.appendChild(entryItem);
+      });
+    }
+  </script>
+</body>
+</html>
